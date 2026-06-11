@@ -8,8 +8,9 @@ import { AlertTriangle } from 'lucide-react'
 export default async function IssuesPage({
   searchParams,
 }: {
-  searchParams: { category?: string; status?: string; priority?: string }
+  searchParams: Promise<{ category?: string; status?: string; priority?: string }>
 }) {
+  const params = await searchParams
   const supabase = await createClient()
 
   let query = supabase
@@ -21,9 +22,9 @@ export default async function IssuesPage({
     `)
     .order('created_at', { ascending: false })
 
-  if (searchParams.category) query = query.eq('category', searchParams.category)
-  if (searchParams.status) query = query.eq('status', searchParams.status)
-  if (searchParams.priority) query = query.eq('priority', searchParams.priority)
+  if (params.category) query = query.eq('category', params.category)
+  if (params.status) query = query.eq('status', params.status)
+  if (params.priority) query = query.eq('priority', params.priority)
 
   const { data: issues } = await query
 
