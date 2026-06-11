@@ -6,7 +6,8 @@ import { MeetingDetailTabs } from '@/components/modules/MeetingDetailTabs'
 import { ArrowLeft, Users, Calendar, Tag } from 'lucide-react'
 import Link from 'next/link'
 
-export default async function MeetingDetailPage({ params }: { params: { id: string } }) {
+export default async function MeetingDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
   const supabase = await createClient()
 
   const [
@@ -16,11 +17,11 @@ export default async function MeetingDetailPage({ params }: { params: { id: stri
     { data: decisions },
     { data: risks },
   ] = await Promise.all([
-    supabase.from('meetings').select('*').eq('id', params.id).single(),
-    supabase.from('issues').select('*, profiles!issues_owner_id_fkey(full_name)').eq('meeting_id', params.id),
-    supabase.from('actions').select('*, profiles!actions_pic_id_fkey(full_name)').eq('meeting_id', params.id),
-    supabase.from('decisions').select('*, profiles!decisions_owner_id_fkey(full_name)').eq('meeting_id', params.id),
-    supabase.from('risks').select('*, profiles!risks_owner_id_fkey(full_name)').eq('meeting_id', params.id),
+    supabase.from('meetings').select('*').eq('id', id).single(),
+    supabase.from('issues').select('*, profiles!issues_owner_id_fkey(full_name)').eq('meeting_id', id),
+    supabase.from('actions').select('*, profiles!actions_pic_id_fkey(full_name)').eq('meeting_id', id),
+    supabase.from('decisions').select('*, profiles!decisions_owner_id_fkey(full_name)').eq('meeting_id', id),
+    supabase.from('risks').select('*, profiles!risks_owner_id_fkey(full_name)').eq('meeting_id', id),
   ])
 
   if (!meeting) notFound()
