@@ -56,7 +56,7 @@ export default async function IssuesPage({
           ].map(tab => (
             <Link key={tab.value} href={tab.value ? `/issues?status=${tab.value}` : '/issues'}>
               <button className={`flex items-center gap-1.5 px-4 py-3 text-sm font-medium border-b-2 transition-colors -mb-px ${
-                (searchParams.status ?? '') === tab.value
+                (params.status ?? '') === tab.value
                   ? 'border-scm-blue text-scm-blue'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}>
